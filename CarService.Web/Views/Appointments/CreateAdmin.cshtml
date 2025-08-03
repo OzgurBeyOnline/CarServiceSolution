@@ -1,0 +1,107 @@
+@model CarService.Web.ViewModels.AppointmentAdminCreateViewModel
+
+@{
+    ViewData["Title"] = "Randevu Oluştur (Admin/Çalışan)";
+}
+
+<div class="container py-5">
+  <h2 class="mb-4">@ViewData["Title"]</h2>
+
+  <form asp-action="CreateAdmin" asp-controller="Appointments" method="post">
+    @Html.AntiForgeryToken()
+    @* VM.Id HiddenFor, eğer gerekiyorsa ekleyin *@
+    <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
+    <!-- 1. Müşteri Seç -->
+    <div class="mb-3">
+      <label asp-for="CustomerId" class="form-label"></label>
+      <select asp-for="CustomerId" asp-items="Model.Customers" class="form-select">
+        <option value="">— Müşteri Seçin —</option>
+      </select>
+      <span asp-validation-for="CustomerId" class="text-danger"></span>
+    </div>
+
+    <!-- 2. Şehir Seç (customer formuyla birebir) -->
+    <div class="mb-3">
+      <label asp-for="CityId" class="form-label"></label>
+      <select asp-for="CityId" asp-items="Model.Cities" class="form-select" id="citySelect">
+        <option value="">— Şehir Seçin —</option>
+      </select>
+      <span asp-validation-for="CityId" class="text-danger"></span>
+    </div>
+
+    <!-- 3. Çalışan Seç -->
+    <div class="mb-3">
+      <label asp-for="EmployeeId" class="form-label"></label>
+      <select asp-for="EmployeeId" asp-items="Model.Employees" class="form-select" id="employeeSelect">
+        <option value="">— Çalışan Seçin —</option>
+      </select>
+      <span asp-validation-for="EmployeeId" class="text-danger"></span>
+    </div>
+
+    <!-- 4. Servis Tipleri (checkbox list) -->
+    <div class="mb-3">
+    <label class="form-label">@Html.DisplayNameFor(m => m.SelectedServiceTypeIds)</label>
+    <div>
+        @foreach (var st in Model.ServiceTypes)
+        {
+        <div class="form-check">
+            <input class="form-check-input"
+                type="checkbox"
+                name="SelectedServiceTypeIds"
+                value="@st.Value"
+                id="svc_@st.Value"
+                @(Model.SelectedServiceTypeIds.Contains(int.Parse(st.Value)) ? "checked" : "") />
+            <label class="form-check-label" for="svc_@st.Value">
+            @st.Text
+            </label>
+        </div>
+        }
+    </div>
+    <span asp-validation-for="SelectedServiceTypeIds" class="text-danger"></span>
+    </div>
+
+    <!-- 5. Tarih & Saat -->
+    <div class="mb-3">
+      <label asp-for="AppointmentDate" class="form-label"></label>
+      <input asp-for="AppointmentDate" type="datetime-local" class="form-control"
+             min="@DateTime.Now:yyyy-MM-ddTHH:mm"
+             max="@DateTime.Now.AddMonths(1):yyyy-MM-ddTHH:mm" />
+      <div class="form-text">Hafta içi 08:00–18:00 arası, 1 saat aralıklarla.</div>
+      <span asp-validation-for="AppointmentDate" class="text-danger"></span>
+    </div>
+
+    <!-- 6. Notlar -->
+    <div class="mb-3">
+      <label asp-for="Notes" class="form-label"></label>
+      <textarea asp-for="Notes" class="form-control" rows="3"></textarea>
+      <span asp-validation-for="Notes" class="text-danger"></span>
+    </div>
+
+    <!-- Butonlar -->
+    <div class="form-buttons mt-4">
+      <button type="submit" class="btn btn-primary">Randevuyu Oluştur</button>
+      <a asp-action="Index" asp-controller="Appointments" class="btn btn-secondary ms-2">İptal</a>
+    </div>
+  </form>
+</div>
+
+@section Scripts {
+  <script>
+    // Şehre göre çalışanları filtrelemek için basit AJAX örneği
+    document.getElementById("citySelect")?.addEventListener("change", function() {
+      const cityId = this.value;
+      const empSelect = document.getElementById("employeeSelect");
+      empSelect.innerHTML = `<option>Yükleniyor...</option>`;
+      fetch(`/api/employees?cityId=${cityId}`)
+        .then(res => res.json())
+        .then(data => {
+          let opts = `<option value="">— Çalışan Seçin —</option>`;
+          data.forEach(e => {
+            opts += `<option value="${e.id}">${e.firstName} ${e.lastName}</option>`;
+          });
+          empSelect.innerHTML = opts;
+        });
+    });
+  </script>
+}

@@ -1,0 +1,55 @@
+@model CarService.Web.ViewModels.ContactViewModel
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "İletişim";
+}
+
+<section class="py-5">
+  <div class="container">
+    <h2 class="mb-4 text-center">Bizimle İletişime Geçin</h2>
+
+    @if (TempData["ContactSuccess"] != null)
+    {
+        <div class="alert alert-success">
+            @TempData["ContactSuccess"]
+        </div>
+    }
+
+    <form asp-action="Contact" method="post">
+      <div class="row g-3">
+        <div class="col-md-6">
+          <label asp-for="FirstName" class="form-label">İsim</label>
+          <input asp-for="FirstName" class="form-control" />
+          <span asp-validation-for="FirstName" class="text-danger small"></span>
+        </div>
+        <div class="col-md-6">
+          <label asp-for="LastName" class="form-label">Soyisim</label>
+          <input asp-for="LastName" class="form-control" />
+          <span asp-validation-for="LastName" class="text-danger small"></span>
+        </div>
+        <div class="col-md-6">
+          <label asp-for="Email" class="form-label">E-posta</label>
+          <input asp-for="Email" class="form-control" />
+          <span asp-validation-for="Email" class="text-danger small"></span>
+        </div>
+        <div class="col-md-6">
+          <label asp-for="PhoneNumber" class="form-label">Telefon</label>
+          <input asp-for="PhoneNumber" class="form-control" />
+          <span asp-validation-for="PhoneNumber" class="text-danger small"></span>
+        </div>
+        <div class="col-12">
+          <label asp-for="Message" class="form-label">Mesajınız</label>
+          <textarea asp-for="Message" rows="5" class="form-control"></textarea>
+          <span asp-validation-for="Message" class="text-danger small"></span>
+        </div>
+        <div class="col-12 text-end">
+          <button type="submit" class="btn btn-primary">Gönder</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</section>
+
+@section Scripts {
+  <partial name="_ValidationScriptsPartial" />
+}

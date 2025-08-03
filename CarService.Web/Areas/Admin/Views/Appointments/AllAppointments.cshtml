@@ -1,0 +1,82 @@
+@model IEnumerable<CarService.Web.ViewModels.AppointmentListViewModel>
+
+@{
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+    ViewData["Title"] = "Tüm Randevular";
+}
+
+<div class="container py-4">
+    <h2 class="mb-4">Tüm Randevular</h2>
+
+    <!-- Arama formu -->
+    <form method="get" class="row g-2 mb-3">
+        <div class="col-auto">
+            <input name="searchName"
+                   value="@(ViewData["SearchName"] ?? "")"
+                   class="form-control"
+                   placeholder="Müşteri adına göre ara" />
+        </div>
+        <div class="col-auto">
+            <button type="submit" class="btn btn-primary">Ara</button>
+            <a asp-area="Admin"
+               asp-controller="Appointments"
+               asp-action="AllAppointments"
+               class="btn btn-secondary ms-2">
+                Temizle
+            </a>
+        </div>
+    </form>
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info">Hiç randevu bulunamadı.</div>
+    }
+    else
+    {
+        <table class="table table-striped table-hover">
+            <thead class="table-dark">
+                <tr>
+                    <th>Id</th>
+                    <th>Müşteri</th>
+                    <th>Çalışan</th>
+                    <th>Servis</th>
+                    <th>Tarih & Saat</th>
+                    <th>Fiyat (₺)</th>
+                    <th>Durum</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var a in Model)
+                {
+                    <tr>
+                        <td>@a.Id</td>
+                        <td>@a.CustomerName</td>
+                        <td>@a.EmployeeName</td>
+                        <td>@a.ServiceType</td>
+                        <td>@a.AppointmentDate.ToString("g")</td>
+                        <td>@a.Price.ToString("N2")</td>
+                        <td>@a.Status</td>
+                        <td class="text-end">
+                            <form asp-area="Admin"
+                                  asp-controller="Appointments"
+                                  asp-action="Delete"
+                                  method="post"
+                                  onsubmit="return confirm('Randevuyu silmek istediğinize emin misiniz?');"
+                                  class="d-inline">
+                                <input type="hidden" name="id" value="@a.Id" />
+                                <button type="submit" class="btn btn-sm btn-outline-danger">
+                                    <i class="bi bi-trash"></i> Sil
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+</div>
+
+@section Styles {
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" />
+}

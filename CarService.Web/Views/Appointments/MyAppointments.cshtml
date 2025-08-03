@@ -1,0 +1,30 @@
+@using X.PagedList
+@using X.PagedList.Mvc.Core
+@model IPagedList<CarService.Web.Models.Appointment>
+  
+@{
+    ViewData["Title"] = "Randevularım";
+}
+<h2>@ViewData["Title"]</h2>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>Tarih</th><th>Servis</th><th>Çalışan</th><th>Durum</th><th>Not</th>
+    </tr>
+  </thead>
+  <tbody>
+  @foreach(var appt in Model)
+  {
+    <tr>
+      <td>@appt.AppointmentDate:g</td>
+      <td>@appt.ServiceType?.Name</td>
+      <td>@appt.Employee?.FirstName @appt.Employee?.LastName</td>
+      <td>@appt.Status</td>
+      <td>@appt.Notes</td>
+    </tr>
+  }
+  </tbody>
+</table>
+
+@Html.PagedListPager(Model, page => Url.Action("MyAppointments", new { page }))

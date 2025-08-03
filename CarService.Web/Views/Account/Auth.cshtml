@@ -1,0 +1,122 @@
+@model CarService.Web.ViewModels.RegisterViewModel
+@using CarService.Web.ViewModels
+
+@{
+    Layout = "_Layout";
+    var returnUrl = ViewData["ReturnUrl"] as string ?? Url.Action("Index", "Home");
+}
+
+@section Styles {
+  <style>
+    .card-hero {
+      width:100%; max-width:800px; height:500px;
+      position:relative; overflow:hidden;
+      border-radius:1rem; box-shadow:0 .5rem 1rem rgba(0,0,0,.1);
+    }
+    .card-hero .inner {
+      display:flex; width:200%; height:100%;
+      transition:transform .6s ease;
+    }
+    .card-hero .panel { width:50%; padding:2rem; }
+    /* dilediğin ek CSS… */
+  </style>
+}
+
+<div class="vh-100 d-flex justify-content-center align-items-center bg-light">
+  <div class="card-hero">
+    <div id="heroInner" class="inner">
+
+      <!-- KAYIT PANELİ -->
+      <div class="panel bg-white">
+        <h4>Kayıt Ol</h4>
+        <form asp-action="Register" method="post">
+          @Html.AntiForgeryToken()
+          <input type="hidden" name="returnUrl" value="@returnUrl" />
+
+          <div class="row gy-2">
+            <div class="col-md-6">
+              <input asp-for="FirstName" class="form-control" placeholder="Adınız" />
+              <span asp-validation-for="FirstName" class="text-danger small"></span>
+            </div>
+            <div class="col-md-6">
+              <input asp-for="LastName" class="form-control" placeholder="Soyadınız" />
+              <span asp-validation-for="LastName" class="text-danger small"></span>
+            </div>
+            <div class="col-md-6">
+              <input asp-for="PhoneNumber" class="form-control" placeholder="Telefon" />
+            </div>
+            <div class="col-md-6">
+              <input asp-for="Email" class="form-control" placeholder="E-posta" />
+              <span asp-validation-for="Email" class="text-danger small"></span>
+            </div>
+            <div class="col-md-6">
+              <input asp-for="Password" type="password" class="form-control" placeholder="Parola" />
+              <span asp-validation-for="Password" class="text-danger small"></span>
+            </div>
+            <div class="col-md-6">
+              <input asp-for="ConfirmPassword" type="password" class="form-control" placeholder="Parola (Tekrar)" />
+              <span asp-validation-for="ConfirmPassword" class="text-danger small"></span>
+            </div>
+            <div class="col-md-6">
+              <select asp-for="CityId" asp-items="Model.Cities" class="form-select">
+                <option value="">-- Şehir Seçin --</option>
+              </select>
+              <span asp-validation-for="CityId" class="text-danger small"></span>
+            </div>
+            <div class="col-md-6">
+              <div class="form-check">
+                <input asp-for="RememberMe" class="form-check-input" />
+                <label asp-for="RememberMe" class="form-check-label">Beni Hatırla</label>
+              </div>
+            </div>
+            <div class="col-12 text-end">
+              <button type="submit" class="btn btn-primary">Kayıt Ol</button>
+            </div>
+          </div>
+
+          <p class="mt-3">
+            Zaten üye misiniz?
+            <button type="button" id="btnToLogin" class="btn btn-link">Giriş Yapın</button>
+          </p>
+        </form>
+      </div>
+
+      <!-- GİRİŞ PANELİ -->
+      <div id="panel2" class="panel bg-white">
+        <h3>Giriş Yap</h3>
+        <form asp-action="Login" method="post">
+          @Html.AntiForgeryToken()
+          <input type="hidden" name="returnUrl" value="@returnUrl" />
+
+          <div class="mb-2">
+            <input asp-for="Email" class="form-control" placeholder="E-posta" />
+            <span asp-validation-for="Email" class="text-danger"></span>
+          </div>
+          <div class="mb-2">
+            <input asp-for="Password" type="password" class="form-control" placeholder="Parola" />
+            <span asp-validation-for="Password" class="text-danger"></span>
+          </div>
+          <div class="form-check mb-2">
+            <input asp-for="RememberMe" class="form-check-input" />
+            <label asp-for="RememberMe" class="form-check-label">Beni Hatırla</label>
+          </div>
+          <button type="submit" class="btn btn-primary">Giriş Yap</button>
+          <p class="mt-3">
+            Henüz üye değil misiniz?
+            <button type="button" id="btnToRegister" class="btn btn-link">Kayıt Ol</button>
+          </p>
+        </form>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+@section Scripts {
+  <partial name="_ValidationScriptsPartial" />
+  <script>
+    const inner = document.getElementById('heroInner');
+    document.getElementById('btnToLogin').onclick    = () => inner.style.transform = 'translateX(-50%)';
+    document.getElementById('btnToRegister').onclick = () => inner.style.transform = 'translateX(0)';
+  </script>
+}

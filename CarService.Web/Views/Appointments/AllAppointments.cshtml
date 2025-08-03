@@ -1,0 +1,42 @@
+@model IEnumerable<CarService.Web.ViewModels.AppointmentListViewModel>
+@{
+    ViewData["Title"] = "Tüm Randevular";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<form method="get" asp-action="AllAppointments" class="mb-4">
+  <div class="input-group">
+    <input type="text" name="searchName" value="@(ViewData["SearchName"] ?? "")"
+           class="form-control" placeholder="Müşteri adı ara..." />
+    <button class="btn btn-primary">Ara</button>
+  </div>
+</form>
+
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>ID</th><th>Müşteri</th><th>Çalışan</th><th>Servis</th>
+      <th>Tarih</th><th>Fiyat</th><th>Durum</th><th></th>
+    </tr>
+  </thead>
+  <tbody>
+  @foreach(var item in Model) {
+    <tr>
+      <td>@item.Id</td>
+      <td>@item.CustomerName</td>
+      <td>@item.EmployeeName</td>
+      <td>@item.ServiceType</td>
+      <td>@item.AppointmentDate:dd.MM.yyyy HH:mm</td>
+      <td>@item.Price:N2</td>
+      <td>@item.Status</td>
+      <td>
+        <form asp-action="Delete" method="post" asp-route-id="@item.Id"
+              onsubmit="return confirm('Silmek istediğinize emin misiniz?');">
+          <button type="submit" class="btn btn-danger btn-sm">Sil</button>
+        </form>
+      </td>
+    </tr>
+  }
+  </tbody>
+</table>

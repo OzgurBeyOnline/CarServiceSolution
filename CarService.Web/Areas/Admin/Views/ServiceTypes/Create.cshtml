@@ -1,0 +1,37 @@
+@model CarService.Web.ViewModels.ServiceTypeCreateViewModel
+@{
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+    ViewData["Title"] = "Yeni Servis Tipi Ekle";
+}
+
+<div class="container py-4">
+    <h2 class="mb-4">Yeni Servis Tipi Ekle</h2>
+
+    @* Hata mesajları *@
+    <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
+    <form asp-action="Create" asp-area="Admin" asp-controller="ServiceTypes" method="post">
+        @Html.AntiForgeryToken()
+
+        <div class="mb-3">
+            <label asp-for="Name" class="form-label"></label>
+            <input asp-for="Name" class="form-control" placeholder="Servis Adı" />
+            <span asp-validation-for="Name" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Description" class="form-label"></label>
+            <textarea asp-for="Description" class="form-control" rows="4" placeholder="Açıklama (opsiyonel)"></textarea>
+            <span asp-validation-for="Description" class="text-danger"></span>
+        </div>
+
+        <div class="d-flex">
+            <button type="submit" class="btn btn-primary me-2">Ekle</button>
+            <a asp-area="Admin" asp-controller="ServiceTypes" asp-action="Index" class="btn btn-secondary">İptal</a>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

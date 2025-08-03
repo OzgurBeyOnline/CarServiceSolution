@@ -1,0 +1,101 @@
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Hakkımızda";
+}
+
+@section Styles {
+  <style>
+    .logo-marquee {
+      position: relative;
+      overflow: hidden;
+    }
+    .logo-marquee .marquee-track {
+      display: inline-flex;       /* tek bir satırda akış */
+      animation: marquee-scroll 15s linear infinite;
+    }
+    .logo-marquee img {
+      height: 80px;
+      object-fit: contain;
+      /* img’ler arası çok hafif boşluk isterseniz buradan ayarlayın */
+      margin-right: 1.5rem;
+      /* son image’in margin’ini sıfırlıyoruz, böylece set biterken gap olmaz */
+    }
+    .logo-marquee .marquee-track img:last-child {
+      margin-right: 0;
+    }
+
+    /* pause on hover isterseniz ekleyin */
+    .logo-marquee:hover .marquee-track {
+      animation-play-state: paused;
+    }
+
+    @@keyframes marquee-scroll {
+      0%   { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+  </style>
+}
+
+<section class="py-5 bg-light">
+  <div class="container">
+    <h1 class="mb-5 text-center">CarService</h1>
+    <div class="row gy-4">
+      <!-- 1. Bölüm: Metin 1 -->
+      <div class="col-md-3">
+        <h4>Bölüm 1</h4>
+        <p>
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus aliquet augue in sapien vestibulum, nec bibendum mi interdum.
+        </p>
+      </div>
+
+      <!-- 2. Bölüm: Metin 2 -->
+      <div class="col-md-3">
+        <h4>Bölüm 2</h4>
+        <p>
+          Fusce sed ex vitae lectus facilisis ullamcorper. Integer sit amet convallis magna. Aliquam erat volutpat. Vivamus efficitur convallis aliquet.
+        </p>
+      </div>
+
+      <!-- 3. Bölüm: Metin 3 -->
+      <div class="col-md-3">
+        <h4>Bölüm 3</h4>
+        <p>
+          Sed sit amet scelerisque libero. Duis vitae sagittis ante. Cras nec sagittis nunc. Pellentesque a purus sit amet magna vehicula pretium.
+        </p>
+      </div>
+
+      <!-- 4. Bölüm: Logo -->
+      <div class="col-md-3 text-center">
+        <img src="~/images/logo-placeholder.png" alt="CarService Logo" class="img-fluid mb-3" />
+        <p class="fw-bold">CarService Logo</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="partners" class="bg-white py-5">
+  <div class="container overflow-hidden">
+    <div class="logo-marquee">
+      <div class="marquee-track">
+        <img src="~/images/logos/logo1.png" alt="Logo 1" />
+        <img src="~/images/logos/logo2.png" alt="Logo 2" />
+        <img src="~/images/logos/logo3.png" alt="Logo 3" />
+        <img src="~/images/logos/logo4.png" alt="Logo 4" />
+        <img src="~/images/logos/logo5.png" alt="Logo 5" />
+        <img src="~/images/logos/logo6.png" alt="Logo 6" />
+        <img src="~/images/logos/logo1.png" alt="Logo 1" />
+        <img src="~/images/logos/logo2.png" alt="Logo 2" />
+        <img src="~/images/logos/logo3.png" alt="Logo 3" />
+        <img src="~/images/logos/logo4.png" alt="Logo 4" />
+        <img src="~/images/logos/logo5.png" alt="Logo 5" />
+        <img src="~/images/logos/logo6.png" alt="Logo 6" />
+        <img src="~/images/logos/logo1.png" alt="Logo 1" />
+        <img src="~/images/logos/logo2.png" alt="Logo 2" />
+        <img src="~/images/logos/logo3.png" alt="Logo 3" />
+        <img src="~/images/logos/logo4.png" alt="Logo 4" />
+        <img src="~/images/logos/logo5.png" alt="Logo 5" />
+        <img src="~/images/logos/logo6.png" alt="Logo 6" />
+      </div>
+    </div>
+  </div>
+</section>

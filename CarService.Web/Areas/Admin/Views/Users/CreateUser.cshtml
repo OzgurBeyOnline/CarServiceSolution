@@ -1,0 +1,66 @@
+@model CarService.Web.ViewModels.CreateUserViewModel
+@using Microsoft.AspNetCore.Mvc.Rendering
+
+@{
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+    ViewData["Title"] = "Yeni Kullanıcı Ekle";
+}
+
+<h2>Yeni Kullanıcı Ekle</h2>
+<div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
+<form asp-area="Admin" asp-controller="Users" asp-action="CreateUser" method="post">
+    @Html.AntiForgeryToken()
+    <div class="row g-3">
+      <div class="col-md-6">
+        <label asp-for="FirstName" class="form-label"></label>
+        <input asp-for="FirstName" class="form-control" />
+        <span asp-validation-for="FirstName" class="text-danger"></span>
+      </div>
+      <div class="col-md-6">
+        <label asp-for="LastName" class="form-label"></label>
+        <input asp-for="LastName" class="form-control" />
+        <span asp-validation-for="LastName" class="text-danger"></span>
+      </div>
+      <div class="col-md-6">
+        <label asp-for="Email" class="form-label"></label>
+        <input asp-for="Email" class="form-control" />
+        <span asp-validation-for="Email" class="text-danger"></span>
+      </div>
+      <div class="col-md-6">
+        <label asp-for="PhoneNumber" class="form-label"></label>
+        <input asp-for="PhoneNumber" class="form-control" />
+        <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+      </div>
+      <div class="col-md-6">
+        <label asp-for="Password" class="form-label"></label>
+        <input asp-for="Password" class="form-control" />
+        <span asp-validation-for="Password" class="text-danger"></span>
+      </div>
+      <div class="col-md-6">
+        <label asp-for="Role" class="form-label"></label>
+        <select asp-for="Role" class="form-select"
+                asp-items="new SelectList((string[])ViewBag.Roles)">
+          <option value="">— Rol Seçin —</option>
+        </select>
+        <span asp-validation-for="Role" class="text-danger"></span>
+      </div>
+      <div class="col-md-6">
+          <label asp-for="CityId" class="form-label">Şehir</label>
+          <select asp-for="CityId" class="form-select"
+                  asp-items="(IEnumerable<SelectListItem>)ViewBag.Cities">
+              <option value="">— Şehir Seçin —</option>
+          </select>
+          <span asp-validation-for="CityId" class="text-danger"></span>
+      </div>
+    </div>
+
+    <div class="mt-4">
+      <button type="submit" class="btn btn-primary">Ekle</button>
+      <a asp-area="Admin" asp-controller="Users" asp-action="Index" class="btn btn-secondary ms-2">İptal</a>
+    </div>
+</form>
+
+@section Scripts {
+  <partial name="_ValidationScriptsPartial" />
+}

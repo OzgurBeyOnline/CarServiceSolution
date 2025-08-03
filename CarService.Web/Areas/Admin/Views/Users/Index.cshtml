@@ -1,0 +1,68 @@
+@model IEnumerable<CarService.Web.ViewModels.UserSummaryViewModel>
+@{
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+    ViewData["Title"] = "Kullanıcı Yönetimi";
+}
+
+<h2 class="mb-4">Kullanıcı Yönetimi</h2>
+
+<div class="mb-3">
+  <a asp-area="Admin" asp-controller="Users" asp-action="CreateUser" class="btn btn-success">
+    Yeni Kullanıcı Ekle
+  </a>
+</div>
+
+
+<form method="get" class="row g-2 mb-3">
+  <div class="col-auto">
+    <input type="text" name="search" value="@(ViewData["Search"] ?? "")"
+           class="form-control" placeholder="Email veya isim ara" />
+  </div>
+  <div class="col-auto">
+    <select name="roleFilter" class="form-select">
+      <option value="">Bütün Roller</option>
+      <option value="Admin"    selected="@(ViewData["RoleFilter"]?.ToString() == "Admin")">Admin</option>
+      <option value="Employee" selected="@(ViewData["RoleFilter"]?.ToString() == "Employee")">Employee</option>
+      <option value="Customer" selected="@(ViewData["RoleFilter"]?.ToString() == "Customer")">Customer</option>
+    </select>
+  </div>
+  <div class="col-auto">
+    <button type="submit" class="btn btn-primary">Ara / Filtrele</button>
+    <a asp-area="Admin" asp-controller="Users" asp-action="Index" class="btn btn-outline-secondary">Temizle</a>
+  </div>
+</form>
+
+<table class="table table-striped table-hover">
+  <thead class="table-dark">
+    <tr>
+      <th>Ad Soyad</th>
+      <th>E-posta</th>
+      <th>Rol</th>
+      <th class="text-center" style="width:120px">İşlem</th>
+    </tr>
+  </thead>
+  <tbody>
+    @foreach (var u in Model)
+    {
+      <tr>
+        <td>@u.FirstName @u.LastName</td>
+        <td>@u.Email</td>
+        <td>@u.Role</td>
+        <td class="text-center">
+          <form 
+            asp-area="Admin" 
+            asp-controller="Users" 
+            asp-action="Delete" 
+            method="post" 
+            class="d-inline"
+            onsubmit="return confirm('Bu kullanıcı silinsin mi?');"
+          >
+            @Html.AntiForgeryToken()
+            <input type="hidden" name="id" value="@u.Id" />
+            <button type="submit" class="btn btn-sm btn-danger">Sil</button>
+          </form>
+        </td>
+      </tr>
+    }
+  </tbody>
+</table>

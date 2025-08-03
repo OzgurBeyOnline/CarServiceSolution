@@ -1,0 +1,43 @@
+@model CarService.Web.ViewModels.CustomerEditViewModel
+@{
+    ViewData["Title"] = "Bilgilerim";
+}
+
+<div class="container py-5">
+    <h2 class="mb-4">Bilgilerim</h2>
+
+    <!-- Başarılı güncelleme mesajı (eğer başka yerde güncelleme yapıyorsanız) -->
+    @if (TempData["ProfileSuccess"] != null)
+    {
+        <div class="alert alert-success">@TempData["ProfileSuccess"]</div>
+    }
+
+    <!-- Kişisel bilgiler sadece okunur modda -->
+    <div class="mb-3">
+        <label class="form-label">Ad Soyad</label>
+        <p class="form-control-plaintext">@Model.FirstName @Model.LastName</p>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">E-posta</label>
+        <p class="form-control-plaintext">@Model.Email</p>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Telefon</label>
+        <p class="form-control-plaintext">
+            @(string.IsNullOrEmpty(Model.PhoneNumber) ? "—" : Model.PhoneNumber)
+        </p>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Şehir</label>
+        <p class="form-control-plaintext">
+            @Model.Cities.FirstOrDefault(c => c.Value == Model.CityId.ToString())?.Text
+        </p>
+    </div>
+
+    <div class="mt-4">
+        <a asp-controller="Home" asp-action="Index" class="btn btn-secondary">Ana Sayfaya Dön</a>
+    </div>
+</div>

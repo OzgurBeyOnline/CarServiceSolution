@@ -1,0 +1,123 @@
+@model CarService.Web.ViewModels.DashboardViewModel
+@{
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+    ViewData["Title"] = "Yönetim Paneli";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<div class="mb-4">
+  <div class="btn-toolbar" role="toolbar">
+    <div class="btn-group me-2" role="group">
+      <a class="btn btn-outline-primary" asp-area="Admin" asp-controller="ServiceTypes" asp-action="Create">Yeni Servis Ekle</a>
+      <a class="btn btn-outline-success" asp-area="Admin" asp-controller="Pricings" asp-action="Create">Yeni Fiyat Tanımla</a>
+      <a class="btn btn-outline-warning" asp-area="" asp-controller="Appointments" asp-action="AllAppointments">Randevu Listele</a>
+      <a class="btn btn-outline-info" asp-area="Admin" asp-controller="Dashboard" asp-action="ExportCustomers">Müşteri Listesini İndir (Excel)</a>
+      <a class="btn btn-outline-secondary" asp-area="Admin" asp-controller="Users" asp-action="Index">Kullanıcı Yönetimi</a>
+    </div>
+  </div>
+</div>
+
+<div class="row g-4 mt-3">
+  <!-- Sayaç Kartları -->
+  <div class="col-md-3">
+    <div class="card text-white bg-primary">
+      <div class="card-body text-center">
+        <h5 class="card-title">Müşteriler</h5>
+        <p class="card-text display-6">@Model.TotalCustomers</p>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card text-white bg-success">
+      <div class="card-body text-center">
+        <h5 class="card-title">Çalışanlar</h5>
+        <p class="card-text display-6">@Model.TotalEmployees</p>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card text-white bg-warning">
+      <div class="card-body text-center">
+        <h5 class="card-title">Randevular</h5>
+        <p class="card-text display-6">@Model.TotalAppointments</p>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card text-white bg-danger">
+      <div class="card-body text-center">
+        <h5 class="card-title">Hizmet Türleri</h5>
+        <p class="card-text display-6">@Model.TotalServices</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Trend Grafik: Aylara Göre Yeni Müşteriler -->
+  <div class="col-md-6">
+    <div class="card">
+      <div class="card-header">Son 6 Ayda Yeni Müşteriler</div>
+      <div class="card-body">
+        <canvas id="customerTrendChart"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <!-- Pasta Grafik: Hizmet Tipi Dağılımı -->
+  <div class="col-md-6">
+    <div class="card">
+      <div class="card-header">En Çok Tercih Edilen Hizmet Türleri</div>
+      <div class="card-body">
+        <canvas id="serviceTypeChart"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <!-- En Aktif Çalışan ve En Çok Randevu Alan Müşteri -->
+  <div class="col-md-6">
+    <div class="card">
+      <div class="card-header">En Aktif Çalışan</div>
+      <div class="card-body">
+        <p>@Model.TopEmployeeName (@Model.TopEmployeeAppointments randevu)</p>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="card">
+      <div class="card-header">En Çok Randevu Alan Müşteri</div>
+      <div class="card-body">
+        <p>@Model.TopCustomerName (@Model.TopCustomerAppointments randevu)</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+@section Scripts {
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+    // Aylara Göre Yeni Müşteriler
+    const ctxCust = document.getElementById('customerTrendChart').getContext('2d');
+    new Chart(ctxCust, {
+      type: 'line',
+      data: {
+        labels: @Html.Raw(Json.Serialize(Model.MonthLabels)),
+        datasets: [{
+          label: 'Yeni Müşteriler',
+          data: @Html.Raw(Json.Serialize(Model.NewCustomersPerMonth)),
+          fill: false,
+          tension: 0.4
+        }]
+      }
+    });
+
+    // Hizmet Tipi Dağılımı
+    const ctxSvc = document.getElementById('serviceTypeChart').getContext('2d');
+    new Chart(ctxSvc, {
+      type: 'doughnut',
+      data: {
+        labels: @Html.Raw(Json.Serialize(Model.ServiceTypeLabels)),
+        datasets: [{ data: @Html.Raw(Json.Serialize(Model.ServiceTypeCounts)) }]
+      }
+    });
+  </script>
+}

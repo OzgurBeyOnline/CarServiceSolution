@@ -1,0 +1,103 @@
+@model CarService.Web.ViewModels.AppointmentCreateViewModel
+
+@{
+    Layout = "_Layout";
+}
+
+@section Styles {
+  <style>
+    .form-section { max-width:600px; margin:auto; }
+    .form-buttons { display:flex; justify-content:space-between; margin-top:1rem; }
+  </style>
+}
+
+<div class="container py-5">
+  <h2 class="mb-4 text-center">Randevu Oluştur</h2>
+  <div class="form-section">
+    <form asp-action="CreateCustomer" method="post">
+      @Html.AntiForgeryToken()
+
+      <div class="mb-3">
+        <label asp-for="CityId" class="form-label"></label>
+        <select asp-for="CityId" asp-items="Model.Cities" class="form-select" id="citySelect">
+          <option value="">— Şehir Seçin —</option>
+        </select>
+      </div>
+
+      <div class="mb-3">
+        <label asp-for="EmployeeId" class="form-label"></label>
+        <select asp-for="EmployeeId" asp-items="Model.Employees" class="form-select" id="employeeSelect">
+          <option value="">— Çalışan Seçin —</option>
+        </select>
+      </div>
+
+      <!-- ====== Burada değişiklik yapıldı ====== -->
+      <div class="mb-3">
+        <label asp-for="SelectedServiceTypeIds" class="form-label"></label>
+        <div>
+          @foreach (var svc in Model.ServiceTypes)
+          {
+              var id = int.Parse(svc.Value);
+              <div class="form-check">
+                <input class="form-check-input"
+                       type="checkbox"
+                       name="SelectedServiceTypeIds"
+                       value="@svc.Value"
+                       id="svc_@svc.Value"
+                       @(Model.SelectedServiceTypeIds.Contains(id) ? "checked" : "") />
+                <label class="form-check-label" for="svc_@svc.Value">
+                  @svc.Text
+                </label>
+              </div>
+          }
+        </div>
+        <span asp-validation-for="SelectedServiceTypeIds" class="text-danger"></span>
+      </div>
+      <!-- ====== Değişiklik sonu ====== -->
+
+      <div class="mb-3">
+        <label asp-for="AppointmentDate" class="form-label"></label>
+        <input asp-for="AppointmentDate"
+               type="datetime-local"
+               class="form-control"
+               min="@DateTime.Now:yyyy-MM-ddT08:00"
+               max="@DateTime.Now.AddMonths(1):yyyy-MM-ddT18:00" />
+        <div class="form-text">Hafta içi 08:00–18:00 arası, 1 saat aralıklarla.</div>
+      </div>
+
+      <div class="mb-3">
+        <label asp-for="Notes" class="form-label"></label>
+        <textarea asp-for="Notes" class="form-control" rows="3"></textarea>
+      </div>
+
+      <div class="form-buttons">
+        <button type="reset" class="btn btn-secondary">Formu Temizle</button>
+        <button type="submit" class="btn btn-primary">Randevuyu Onayla</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+
+@section Scripts {
+  <script>
+    // Şehir seçilince sadece o şehre ait çalışanları getir
+    document.getElementById('citySelect').addEventListener('change', async function() {
+      const cityId = this.value;
+      const empSel = document.getElementById('employeeSelect');
+      empSel.innerHTML = '<option>Yükleniyor…</option>';
+
+      const url = '/api/employees' + (cityId ? `?cityId=${cityId}` : '');
+      const res = await fetch(url);
+      const data = await res.json();
+
+      empSel.innerHTML = `<option value="">— Çalışan Seçin —</option>`;
+      data.forEach(e => {
+        const opt = document.createElement('option');
+        opt.value = e.id;
+        opt.text  = `${e.firstName} ${e.lastName}`;
+        empSel.appendChild(opt);
+      });
+    });
+  </script>
+}
