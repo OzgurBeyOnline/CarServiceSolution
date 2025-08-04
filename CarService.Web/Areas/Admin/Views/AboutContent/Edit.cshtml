@@ -1,0 +1,103 @@
+@model Dictionary<string,string>
+@{
+    Layout = "_AdminLayout";
+    ViewData["Title"] = "Hakkımızda Düzenle";
+}
+
+<h2>Hakkımızda İçeriğini Düzenle</h2>
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success">@TempData["Success"]</div>
+}
+
+<form asp-area="Admin" asp-controller="AboutContent" asp-action="Edit" method="post">
+    @Html.AntiForgeryToken()
+
+    <div class="mb-3">
+        <label>Başlık (AboutHeading)</label>
+        <input name="AboutHeading" class="form-control"
+               value="@Model.GetValueOrDefault("AboutHeading","")" />
+    </div>
+
+    
+        <div class="mb-3">
+            <label for="AboutHeading">Başlık</label>
+            <input id="AboutHeading" name="AboutHeading" class="form-control"
+                value="@(Model.GetValueOrDefault("AboutHeading",""))" />
+        </div>
+
+        <fieldset class="border p-3 mb-4">
+            <legend class="w-auto">Bölüm 1</legend>
+            <div class="mb-3">
+            <label for="AboutSection1_Title">Başlık (AboutSection1_Title)</label>
+            <input id="AboutSection1_Title"
+                    name="AboutSection1_Title"
+                    class="form-control"
+                    value="@(Model.GetValueOrDefault("AboutSection1_Title",""))" />
+            </div>
+            <div class="mb-3">
+            <label for="AboutSection1_Text">Metin (AboutSection1_Text)</label>
+            <textarea id="AboutSection1_Text"
+                        name="AboutSection1_Text"
+                        class="form-control"
+                        rows="4">@Model.GetValueOrDefault("AboutSection1_Text","")</textarea>
+            </div>
+        </fieldset>
+
+        <fieldset class="border p-3 mb-4">
+            <legend class="w-auto">Bölüm 2</legend>
+            <div class="mb-3">
+            <label for="AboutSection2_Title">Başlık (AboutSection2_Title)</label>
+            <input id="AboutSection2_Title"
+                    name="AboutSection2_Title"
+                    class="form-control"
+                    value="@(Model.GetValueOrDefault("AboutSection2_Title",""))" />
+            </div>
+            <div class="mb-3">
+            <label for="AboutSection2_Text">Metin (AboutSection2_Text)</label>
+            <textarea id="AboutSection2_Text"
+                        name="AboutSection2_Text"
+                        class="form-control"
+                        rows="4">@Model.GetValueOrDefault("AboutSection2_Text","")</textarea>
+            </div>
+        </fieldset>
+
+        <fieldset class="border p-3 mb-4">
+            <legend class="w-auto">Bölüm 3</legend>
+            <div class="mb-3">
+            <label for="AboutSection3_Title">Başlık (AboutSection3_Title)</label>
+            <input id="AboutSection3_Title"
+                    name="AboutSection3_Title"
+                    class="form-control"
+                    value="@(Model.GetValueOrDefault("AboutSection3_Title",""))" />
+            </div>
+            <div class="mb-3">
+            <label for="AboutSection3_Text">Metin (AboutSection3_Text)</label>
+            <textarea id="AboutSection3_Text"
+                        name="AboutSection3_Text"
+                        class="form-control"
+                        rows="4">@Model.GetValueOrDefault("AboutSection3_Text","")</textarea>
+            </div>
+        </fieldset>
+
+        <fieldset class="border p-3 mb-4">
+            <legend class="w-auto">Bölüm 4</legend>
+            <div class="mb-3">
+            <label for="AboutSection4_Title">Başlık (AboutSection4_Title)</label>
+            <input id="AboutSection4_Title"
+                    name="AboutSection4_Title"
+                    class="form-control"
+                    value="@(Model.GetValueOrDefault("AboutSection4_Title",""))" />
+            </div>
+            <div class="mb-3">
+            <label for="AboutSection4_Text">Metin (AboutSection4_Text)</label>
+            <textarea id="AboutSection4_Text"
+                        name="AboutSection4_Text"
+                        class="form-control"
+                        rows="4">@Model.GetValueOrDefault("AboutSection4_Text","")</textarea>
+            </div>
+        </fieldset>
+    
+
+    <button type="submit" class="btn btn-primary">Kaydet</button>
+</form>

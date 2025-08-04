@@ -1,0 +1,27 @@
+@model CarService.Web.ViewModels.PricingCreateViewModel
+@{
+  ViewData["Title"] = "Fiyatı Düzenle";
+  Layout = "_AdminLayout";
+}
+
+<h2>Fiyat Bilgisi Düzenle</h2>
+
+<form asp-area="Admin" asp-controller="Pricings" asp-action="Edit" method="post">
+  @Html.AntiForgeryToken()
+  <input type="hidden" asp-for="Id" />
+
+  <div class="mb-3">
+    <label asp-for="ServiceTypeId" class="form-label">Servis Tipi</label>
+    <select asp-for="ServiceTypeId" asp-items="Model.ServiceTypes" class="form-select"></select>
+    <span asp-validation-for="ServiceTypeId" class="text-danger"></span>
+  </div>
+
+  <div class="mb-3">
+    <label asp-for="Price" class="form-label">Fiyat (TL)</label>
+    <input asp-for="Price" class="form-control" />
+    <span asp-validation-for="Price" class="text-danger"></span>
+  </div>
+
+  <button type="submit" class="btn btn-primary">Kaydet</button>
+  <a asp-area="Admin" asp-controller="Pricings" asp-action="Create" class="btn btn-outline-secondary ms-2">İptal</a>
+</form>

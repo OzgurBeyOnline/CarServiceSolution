@@ -25,20 +25,29 @@
           <li class="nav-item">
             <a class="nav-link" asp-area="Admin" asp-controller="Dashboard" asp-action="Index">İstatistikler</a>
           </li>
-          <li class="nav-item">
+          <li class="nav-item"></li>
             <a class="nav-link"
               asp-area="Admin"
-              asp-controller="Content"
-              asp-action="Edit"
-              asp-route-key="Home">
-              Anasayfa Düzenleme
+              asp-controller="SectionContent"
+              asp-action="EditHome">
+              Anasayfa Düzenle
+            </a>
+          </li>
+          <li class="nav-item"></li>
+            <a class="nav-link" 
+            asp-area="Admin" 
+            asp-controller="AboutContent"
+            asp-action="Edit">
+              Hakkımızda Düzenle
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" asp-area="Admin" asp-controller="Content" asp-action="Edit" asp-route-key="About">Hakkımızda Düzenleme</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" asp-area="Admin" asp-controller="Content" asp-action="Edit" asp-route-key="Contact">İletişim Güncelleme</a>
+            <a class="nav-link" 
+            asp-area="Admin" 
+            asp-controller="ContactContent" 
+            asp-action="Edit">
+              İletişim CTA Düzenle
+            </a>
           </li>
         </ul>
         <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
@@ -46,6 +55,12 @@
             <span class="navbar-text text-white">
               Hoşgeldiniz <strong>@User.Identity!.Name</strong>
             </span>
+          </li>
+          <li class="nav-item"></li>
+            <a class="btn btn-outline-light me-2" 
+              asp-area="" asp-controller="Home" asp-action="Index">
+              Anasayfaya Dön
+            </a>
           </li>
           <li class="nav-item">
             <form asp-area="" asp-controller="Account" asp-action="Logout" method="post" class="d-inline">

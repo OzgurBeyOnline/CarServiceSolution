@@ -1,0 +1,61 @@
+footer a,
+.navbar .nav-link {
+  color: #e0e0e0;
+  transition: color 0.3s ease;
+}
+footer a:hover,
+.navbar .nav-link:hover {
+  color: #0d6efd;
+  text-decoration: none;
+}
+
+.navbar .nav-link.active,
+.navbar .nav-link:focus,
+.navbar .nav-link:hover {
+  color: #0d6efd !important;
+}
+
+.navbar-brand {
+  font-weight: bold;
+  letter-spacing: 0.5px;
+}
+footer h5, footer h6 {
+  font-weight: 600;
+}
+footer ul li {
+  margin-bottom: 0.4rem;
+}
+
+.dropdown-menu {
+  background-color: #1e1e1e;
+  border: 1px solid #333;
+  padding: 0.5rem 0;
+  border-radius: 8px;
+  color: #f1f1f1;
+}
+
+.dropdown-menu .dropdown-item {
+  color: #e0e0e0;
+  padding: 0.5rem 1rem;
+  transition: background-color 0.3s ease;
+}
+
+.dropdown-menu .dropdown-item:hover {
+  background-color: #2a2a2a;
+  color: #0d6efd;
+}
+
+@keyframes dropdownFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.dropdown-menu.show {
+  animation: dropdownFadeIn 0.25s ease-out forwards;
+}

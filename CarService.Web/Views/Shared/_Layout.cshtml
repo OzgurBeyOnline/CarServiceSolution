@@ -1,5 +1,7 @@
 ﻿@using Microsoft.AspNetCore.Identity
+@using System.Threading.Tasks
 @using CarService.Web.Services
+@inject IJsonContentService _jsonSvc
 @inject ICustomerService CustomerService
 @inject SignInManager<IdentityUser> SignInManager
 @inject UserManager<IdentityUser> UserManager
@@ -12,11 +14,12 @@
     <title>@ViewData["Title"] - CarService</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="~/css/Layout.css" asp-append-version="true">
     @RenderSection("Styles", required: false)
 </head>
 <body class="d-flex flex-column min-vh-100">
     <!-- NAVBAR -->
-  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm">
     <div class="container-fluid">
       <a class="navbar-brand" asp-controller="Home" asp-action="Index">CarService</a>
       <button class="navbar-toggler" type="button"
@@ -115,14 +118,14 @@
 
             @* Ortak “Hoşgeldiniz” mesajı *@
             <li class="nav-item d-flex align-items-center me-3">
-              <span class="navbar-text">
+              <span class="navbar-text" style="color: rgb(30, 218, 30) !important;">
                 Hoşgeldiniz <strong>@User.Identity.Name</strong>
               </span>
             </li>
 
             <li class="nav-item">
               <form asp-controller="Account" asp-action="Logout" method="post" class="d-inline">
-                <button type="submit" class="btn btn-link nav-link">Çıkış Yap</button>
+                <button type="submit" class="btn btn-link nav-link" style="color: red;">Çıkış Yap</button>
               </form>
             </li>
           }
@@ -137,7 +140,14 @@
     </div>
 
     <!-- FOOTER -->
-    <footer class="bg-light text-dark mt-auto py-4">
+    @{
+    // We’re in a sync context (layout), so .Result is okay here.
+    var footerData = _jsonSvc.LoadAsync("contact.json").Result 
+                     ?? new Dictionary<string, string>();
+    string F(string key, string def = "") 
+        => footerData.TryGetValue(key, out var v) ? v : def;
+    }
+    <footer class="bg-dark text-light mt-auto py-4 border-top border-secondary">
       <div class="container">
         <div class="row">
           <div class="col-md-4 mb-3">
@@ -147,22 +157,23 @@
           <div class="col-md-4 mb-3">
             <h6>Linkler</h6>
             <ul class="list-unstyled">
-              <li><a class="text-dark" asp-controller="Home" asp-action="Index">Anasayfa</a></li>
-              <li><a class="text-dark" asp-controller="Home" asp-action="About">Hakkımızda</a></li>
-              <li><a class="text-dark" asp-controller="Home" asp-action="Contact">İletişim</a></li>
+              <li><a class="text-light" asp-controller="Home" asp-action="Index">Anasayfa</a></li>
+              <li><a class="text-light" asp-controller="Home" asp-action="About">Hakkımızda</a></li>
+              <li><a class="text-light" asp-controller="Home" asp-action="Contact">İletişim</a></li>
             </ul>
           </div>
           <div class="col-md-4 mb-3">
             <h6>İletişim</h6>
             <ul class="list-unstyled">
-              <li>Email: destek@carservice.com</li>
-              <li>Tel: +90 555 123 4567</li>
-              <li>Adres: İstanbul, Türkiye</li>
+              <li>Email: @F("FooterEmail", "destek@carservice.com")</li>
+              <li>Tel:   @F("FooterPhone", "+90 555 123 4567")</li>
+              <li>Adres: @F("FooterAddress", "İstanbul, Türkiye")</li>
             </ul>
           </div>
         </div>
       </div>
     </footer>
+
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     @RenderSection("Scripts", required: false)

@@ -2,13 +2,58 @@
 @{
     ViewData["Title"] = "Yeni Servis Tipi";
 }
+
+@section Styles{
+  <style>
+    @@keyframes zoomFade {
+      0% {
+        opacity: 0;
+        transform: scale(0.95);
+      }
+      100% {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    .animate-form {
+      animation: zoomFade 0.5s ease-out forwards;
+    }
+
+    body {
+      background-color: #121212;
+      color: #f1f1f1;
+    }
+
+    form {
+      background-color: #1e1e1e;
+      padding: 2rem;
+      border-radius: 10px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.4);
+    }
+
+    input.form-control,
+    textarea.form-control {
+      background-color: #2a2a2a;
+      color: #f1f1f1;
+      border: 1px solid #444;
+    }
+
+    input.form-control:focus,
+    textarea.form-control:focus {
+      border-color: #0d6efd;
+      box-shadow: 0 0 5px rgba(13,110,253,0.6);
+    }
+  </style>
+}
+
 <h2>@ViewData["Title"]</h2>
 
 @if (TempData["Success"] != null) {
   <div class="alert alert-success">@TempData["Success"]</div>
 }
 
-<form asp-action="Create" method="post">
+<form asp-action="Create" method="post" class="animate-form">
   @Html.AntiForgeryToken()
   <div class="mb-3">
     <label asp-for="Name" class="form-label"></label>

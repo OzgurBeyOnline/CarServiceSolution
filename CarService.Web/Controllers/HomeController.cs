@@ -23,32 +23,34 @@ namespace CarService.Web.Controllers
         private readonly IAppointmentService        _appointmentService;
         private readonly ICustomerService           _customerService;
         private readonly IConfiguration             _configuration;
+        private readonly IJsonContentService        _jsonSvc;
         private readonly ApplicationDbContext       _context;
-        private readonly IPageContentService _contentSvc;
+        
 
         public HomeController(
             ILogger<HomeController> logger,
             ICityService cityService,
+            IJsonContentService jsonSvc,
             IServiceTypeService serviceTypeService,
             IAppointmentService appointmentService,
             ICustomerService customerService,
             ApplicationDbContext context,
-            IConfiguration configuration,
-            IPageContentService contentSvc)
+            IConfiguration configuration)
         {
             _logger = logger;
             _cityService = cityService;
+            _jsonSvc = jsonSvc;
             _serviceTypeService = serviceTypeService;
             _appointmentService = appointmentService;
             _customerService = customerService;
             _configuration = configuration;
             _context = context;
-            _contentSvc         = contentSvc;
         }
 
         [HttpGet]
         public async Task<IActionResult> Index()
         {
+            ViewBag.Sections = await _jsonSvc.LoadAsync();
             // 1) Register formu için şehir listesini hazırla
             var vm = new RegisterViewModel
             {
@@ -73,11 +75,7 @@ namespace CarService.Web.Controllers
             else
             {
                 ViewBag.ApptVm = null;
-            }
-
-            var contents = await _contentSvc.GetAllAsync();
-            ViewBag.PageContents = contents.ToDictionary(x => x.Key, x => x.Html);
-            
+            }            
 
             return View(vm);
         }
@@ -92,7 +90,13 @@ namespace CarService.Web.Controllers
 
 
         [HttpGet]
-        public IActionResult About() => View();
+        public async Task<IActionResult> About()
+        {
+            // JSON'u oku
+            Dictionary<string, string> model = await _jsonSvc.LoadAsync();
+            // View'a gönder
+            return View(model);
+        }
 
         // ---- İLETİŞİM ----
         [HttpGet]

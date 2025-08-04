@@ -2,19 +2,69 @@
 @{
     ViewData["Title"] = "Yeni Fiyat Bilgisi";
 }
+
+@section Styles{
+  <style>
+    @@keyframes slideFadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .animate-form {
+    animation: slideFadeIn 0.5s ease-out forwards;
+  }
+
+  body {
+    background-color: #121212;
+    color: #f1f1f1;
+  }
+
+  form {
+    background-color: #1e1e1e;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+  }
+
+  label.form-label {
+    color: #e0e0e0;
+  }
+
+  input.form-control,
+  select.form-select {
+    background-color: #2a2a2a;
+    color: #ffffff;
+    border: 1px solid #444;
+  }
+
+  input.form-control:focus,
+  select.form-select:focus {
+    border-color: #0d6efd;
+    box-shadow: 0 0 5px rgba(13, 110, 253, 0.6);
+  }
+
+  </style>
+}
+
 <h2>@ViewData["Title"]</h2>
 
 @if (TempData["Success"] != null) {
   <div class="alert alert-success">@TempData["Success"]</div>
 }
 
-<form asp-action="Create" method="post">
+<form asp-action="Create" method="post" class="animate-form">
   @Html.AntiForgeryToken()
 
   <div class="mb-3">
     <label asp-for="ServiceTypeId" class="form-label"></label>
     <select asp-for="ServiceTypeId" asp-items="Model.ServiceTypes" class="form-select">
-      <option value="">— Servis Tipi Seçin —</option>
+      <option value="">— Yeni Eklemiş Olduğunuz Servis Tipini Seçin —</option>
     </select>
     <span asp-validation-for="ServiceTypeId" class="text-danger"></span>
   </div>

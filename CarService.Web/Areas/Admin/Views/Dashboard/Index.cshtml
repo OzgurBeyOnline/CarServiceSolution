@@ -4,6 +4,8 @@
     ViewData["Title"] = "Yönetim Paneli";
 }
 
+
+
 <h2>@ViewData["Title"]</h2>
 
 <div class="mb-4">
@@ -21,7 +23,7 @@
 <div class="row g-4 mt-3">
   <!-- Sayaç Kartları -->
   <div class="col-md-3">
-    <div class="card text-white bg-primary">
+    <div class="card text-white bg-primary h-100">
       <div class="card-body text-center">
         <h5 class="card-title">Müşteriler</h5>
         <p class="card-text display-6">@Model.TotalCustomers</p>
@@ -29,7 +31,7 @@
     </div>
   </div>
   <div class="col-md-3">
-    <div class="card text-white bg-success">
+    <div class="card text-white bg-success h-100">
       <div class="card-body text-center">
         <h5 class="card-title">Çalışanlar</h5>
         <p class="card-text display-6">@Model.TotalEmployees</p>
@@ -37,7 +39,7 @@
     </div>
   </div>
   <div class="col-md-3">
-    <div class="card text-white bg-warning">
+    <div class="card text-white bg-warning h-100">
       <div class="card-body text-center">
         <h5 class="card-title">Randevular</h5>
         <p class="card-text display-6">@Model.TotalAppointments</p>
@@ -45,7 +47,7 @@
     </div>
   </div>
   <div class="col-md-3">
-    <div class="card text-white bg-danger">
+    <div class="card text-white bg-danger h-100">
       <div class="card-body text-center">
         <h5 class="card-title">Hizmet Türleri</h5>
         <p class="card-text display-6">@Model.TotalServices</p>

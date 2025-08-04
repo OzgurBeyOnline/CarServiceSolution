@@ -1,9 +1,12 @@
 using CarService.Web.Models;
+using Microsoft.AspNetCore.Identity;
 using CarService.Web.Services;
 using CarService.Web.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using System.Text;
+using Microsoft.AspNetCore.WebUtilities;
 using System.Threading.Tasks;
 
 namespace CarService.Web.Controllers
@@ -11,23 +14,26 @@ namespace CarService.Web.Controllers
     public class AccountController : Controller
     {
         private readonly IServiceTypeService _serviceTypeService;
-        private readonly IAccountService     _accountService;
-        private readonly IEmailService       _emailService;
-        private readonly ICustomerService    _customerService;
-        private readonly ICityService        _cityService;
+        private readonly IAccountService _accountService;
+        private readonly IEmailService _emailService;
+        private readonly ICustomerService _customerService;
+        private readonly ICityService _cityService;
+        private readonly UserManager<IdentityUser> _userManager;
 
         public AccountController(
-            IAccountService      accountService,
-            IEmailService        emailService,
-            ICustomerService     customerService,
-            ICityService         cityService,
-            IServiceTypeService  serviceTypeService)
+            IAccountService accountService,
+            IEmailService emailService,
+            ICustomerService customerService,
+            ICityService cityService,
+            UserManager<IdentityUser> userManager,
+            IServiceTypeService serviceTypeService)
         {
-            _accountService      = accountService;
-            _emailService        = emailService;
-            _customerService     = customerService;
-            _cityService         = cityService;
-            _serviceTypeService  = serviceTypeService;
+            _accountService = accountService;
+            _emailService = emailService;
+            _customerService = customerService;
+            _cityService = cityService;
+            _serviceTypeService = serviceTypeService;
+            _userManager = userManager;
         }
 
         // ---- AUTH PAGE (Register + Login) ----
@@ -74,11 +80,11 @@ namespace CarService.Web.Controllers
             // AspNetUsers tablosuna ekleme başarılı, şimdi Customers tablosuna detay kaydet
             var customer = new Customer
             {
-                FirstName   = vm.FirstName,
-                LastName    = vm.LastName,
-                Email       = vm.Email,
+                FirstName = vm.FirstName,
+                LastName = vm.LastName,
+                Email = vm.Email,
                 PhoneNumber = vm.PhoneNumber,
-                CityId      = vm.CityId
+                CityId = vm.CityId
             };
             await _customerService.CreateAsync(customer, vm.Password);
 
@@ -133,11 +139,11 @@ namespace CarService.Web.Controllers
             return RedirectToAction("Index", "Home");
         }
 
-        // ---- LOGOUT ----
+        
 
         [HttpPost]
-        [Authorize]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public async Task<IActionResult> Logout()
         {
             await _accountService.SignOutAsync();
@@ -146,40 +152,85 @@ namespace CarService.Web.Controllers
 
         // ---- FORGOT PASSWORD ----
 
-        [HttpGet]
-        [AllowAnonymous]
+        [HttpGet, AllowAnonymous]
         public IActionResult ForgotPassword()
             => View(new ForgotPasswordViewModel());
 
-        [HttpPost]
-        [AllowAnonymous]
-        [ValidateAntiForgeryToken]
+        [HttpPost, AllowAnonymous, ValidateAntiForgeryToken]
         public async Task<IActionResult> ForgotPassword(ForgotPasswordViewModel vm)
         {
             if (!ModelState.IsValid)
                 return View(vm);
 
-            var newPassword = _accountService.GenerateRandomPassword();
-            var token       = await _accountService.GeneratePasswordResetTokenAsync(vm.Email);
-            if (token != null)
+            // 1) Token üret
+            var rawToken = await _accountService.GeneratePasswordResetTokenAsync(vm.Email);
+            if (rawToken != null)
             {
-                var resetResult = await _accountService.ResetPasswordAsync(vm.Email, token, newPassword);
-                if (resetResult.Succeeded)
-                {
-                    var body = $@"
-                        <p>Merhaba,</p>
-                        <p>Yeni parolanız: <strong>{newPassword}</strong></p>
-                        <p>Lütfen giriş yaptıktan sonra parolanızı değiştirin.</p>";
-                    await _emailService.SendAsync(vm.Email, "Yeni Parolanız", body);
-                }
+                // 2) URL güvenli hale getir
+                var tokenBytes = Encoding.UTF8.GetBytes(rawToken);
+                var code = WebEncoders.Base64UrlEncode(tokenBytes);
+
+                // 3) Reset link oluştur
+                var callbackUrl = Url.Action(
+                    "ResetPassword", "Account",
+                    new { token = code, email = vm.Email },
+                    protocol: Request.Scheme);
+
+                var body = $@"
+                    <p>Parolanızı yenilemek için lütfen aşağıdaki linke tıklayın:</p>
+                    <p><a href=""{callbackUrl}"">Parolamı Sıfırla</a></p>
+                    <p>Link geçici olarak geçerli olacaktır.</p>";
+
+                await _emailService.SendAsync(vm.Email, "CarService - Parola Sıfırlama", body);
             }
 
             return RedirectToAction(nameof(ForgotPasswordConfirmation));
         }
 
-        [HttpGet]
-        [AllowAnonymous]
+        [HttpGet, AllowAnonymous]
         public IActionResult ForgotPasswordConfirmation()
+            => View();
+
+        // ---- RESET PASSWORD ----
+
+        [HttpGet, AllowAnonymous]
+        public IActionResult ResetPassword(string token, string email)
+        {
+            if (string.IsNullOrEmpty(token) || string.IsNullOrEmpty(email))
+                return BadRequest("Geçersiz istek.");
+
+            var vm = new ResetPasswordViewModel {
+                Token = token,
+                Email = email
+            };
+            return View(vm);
+        }
+
+        [HttpPost, AllowAnonymous, ValidateAntiForgeryToken]
+        public async Task<IActionResult> ResetPassword(ResetPasswordViewModel vm)
+        {
+            if (!ModelState.IsValid)
+                return View(vm);
+
+            // token'ı orijinale döndür
+            var tokenBytes = WebEncoders.Base64UrlDecode(vm.Token);
+            var rawToken   = Encoding.UTF8.GetString(tokenBytes);
+
+            var result = await _accountService.ResetPasswordAsync(
+                vm.Email, rawToken, vm.Password);
+
+            if (!result.Succeeded)
+            {
+                foreach (var e in result.Errors)
+                    ModelState.AddModelError("", e.Description);
+                return View(vm);
+            }
+
+            return RedirectToAction(nameof(ResetPasswordConfirmation));
+        }
+
+        [HttpGet, AllowAnonymous]
+        public IActionResult ResetPasswordConfirmation()
             => View();
     }
 }

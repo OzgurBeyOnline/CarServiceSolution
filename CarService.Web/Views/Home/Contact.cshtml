@@ -4,9 +4,72 @@
     ViewData["Title"] = "İletişim";
 }
 
+@section Styles {
+  <style>
+
+    body {
+      background-color: #121212 !important;
+    }
+
+    .container {
+      background-color: transparent !important;
+    }
+
+    section {
+    background-color: #121212;
+    color: #1f1f1f;
+    border-radius: 12px;
+    padding: 2rem 1rem;
+  }
+
+  label.form-label {
+    color: #e0e0e0;
+  }
+
+  input.form-control,
+  textarea.form-control {
+    background-color: #1f1f1f;
+    color: #ffffff;
+    border: 1px solid #333;
+    transition: border 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  input.form-control:focus,
+  textarea.form-control:focus {
+    border-color: #0d6efd;
+    box-shadow: 0 0 5px rgba(13, 110, 253, 0.6);
+    background-color: #1f1f1f;
+    color: #fff;
+  }
+
+  .btn-primary {
+    background-color: #0d6efd;
+    border: none;
+  }
+
+  .btn-primary:hover {
+    background-color: #0b5ed7;
+  }
+
+  .alert-success {
+    background-color: #1e3c24;
+    color: #c2f0c2;
+    border-color: #2e5933;
+  }
+
+  form {
+    background-color: #1a1a1a;
+    border-radius: 12px;
+    padding: 2rem;
+    box-shadow: 0 0 15px rgba(0,0,0,0.4);
+  }
+  </style>
+}
+
+
 <section class="py-5">
   <div class="container">
-    <h2 class="mb-4 text-center">Bizimle İletişime Geçin</h2>
+    <h2 class="mb-4 text-center" style="color: #fff;">Bizimle İletişime Geçin</h2>
 
     @if (TempData["ContactSuccess"] != null)
     {

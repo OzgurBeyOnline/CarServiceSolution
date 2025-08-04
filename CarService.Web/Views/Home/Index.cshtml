@@ -9,12 +9,30 @@
     var apptVm = (CarService.Web.ViewModels.AppointmentCreateViewModel?)ViewBag.ApptVm;
     var serviceTypes = ViewBag.ServiceTypes as IEnumerable<ServiceType> 
                        ?? Enumerable.Empty<ServiceType>();
-    var pageContents = ViewBag.PageContents as IList<PageContent> 
-                       ?? Enumerable.Empty<PageContent>();
+    var sec = (Dictionary<string,string>)ViewBag.Sections;
+    var data = Model;
 }
 
 @section Styles {
     <style>
+      body {
+        background-color: #121212;
+        color: #f1f1f1;
+        font-family: 'Segoe UI', sans-serif;
+      }
+
+      section {
+        background-color: transparent !important;
+      }
+
+      h1, h2, h5 {
+        color: #ffffff;
+      }
+
+      a, a.btn {
+        transition: all 0.3s ease-in-out;
+      }
+
       .card-hero {
         width: 100%; max-width: 800px;
         height: 500px;
@@ -24,6 +42,49 @@
         box-shadow: 0 .5rem 1rem rgba(0,0,0,.1);
         background: #f8f9fa;
       }
+
+      .card {
+        background-color: #1e1e1e;
+        border: 1px solid #2c2c2c;
+        color: #f1f1f1;
+        box-shadow: 0 0 15px rgba(0,0,0,0.2);
+      }
+      .card:hover {
+        transform: scale(1.03);
+        border-color: #3a3a3a;
+      }
+
+      .btn-primary {
+        background-color: #0d6efd;
+        border-color: #0d6efd;
+      }
+      .btn-primary:hover {
+        background-color: #0b5ed7;
+      }
+
+      #misyonVizyon h2,
+      #hakkimizda h2 {
+        color: #0d6efd;
+      }
+
+      .bg-light {
+        background-color: #1a1a1a !important;
+      }
+
+      .bg-white {
+        background-color: #1e1e1e !important;
+      }
+
+      .bg-secondary {
+        background-color: transparent !important;
+        backdrop-filter: none;
+        box-shadow: none;
+      }
+
+      .text-white {
+        color: #f1f1f1 !important;
+      }
+
 
       /* İçerik: 2 panel x %50 yükseklik = toplam %200 */
       .card-hero .inner {
@@ -60,16 +121,6 @@
       }
     </style>
 }
-
-
-@* ====== Dinamik Admin Tarafından Girilmiş İçerikler ======*@
-@foreach (var pc in pageContents.OrderBy(pc => pc.DisplayOrder))
-{
-    <section id="@pc.Key.ToLower()" class="my-5">
-        @Html.Raw(pc.Html)
-    </section>
-}
-@* ========================================================= *@
 
 
 <section class="vh-100 d-flex justify-content-center align-items-center bg-light">
@@ -122,65 +173,81 @@
 </section>
 
 
-<section id="misyonVizyon" class="vh-100 d-flex align-items-center bg-light">
+@* Misyon/Vizyon *@
+<section id="misyonVizyon" class="vh-100 d-flex align-items-center bg-light" style="margin-top: 7rem;">
   <div class="container">
     <div class="row gy-5">
       <div class="col-md-6 d-flex flex-column justify-content-center">
-        <h2 class="mb-3">Misyonumuz</h2>
-        <p>
-          Firmamızın misyonu, aracınızın güvenliğini ve performansını
-          en üst seviyede tutmak için kaliteli hizmet sunmaktır. Müşterilerimize
-          şeffaf fiyat politikası, hızlı ve uzman çözümlerle her zaman yanlarında
-          olmayı taahhüt ederiz.
+        <h2 class="mb-3">
+          @sec.GetValueOrDefault("MisyonTitle", "Misyon başlığı bulunamadı")
+        </h2>
+        <p style="color: #fff;">
+          @Html.Raw(sec.GetValueOrDefault("MisyonText", "<em>Misyon metni yok</em>"))
         </p>
       </div>
       <div class="col-md-6 d-flex flex-column justify-content-center">
-        <h2 class="mb-3">Vizyonumuz</h2>
-        <p>
-          Otomotiv servisinde sektöre yön veren bir referans noktası olmak;
-          teknolojiyi yakından takip ederek yenilikçi ve çevre dostu çözümler
-          geliştirmek; müşteri memnuniyetini daima en üst düzeyde tutmak
-          vizyonumuzun temelini oluşturur.
+        <h2 class="mb-3">
+          @sec.GetValueOrDefault("VizyonTitle", "Vizyon başlığı bulunamadı")
+        </h2>
+        <p style="color: #fff;">
+          @Html.Raw(sec.GetValueOrDefault("VizyonText", "<em>Vizyon metni yok</em>"))
         </p>
       </div>
     </div>
   </div>
 </section>
 
-<section id="hakkimizda" class="vh-100 d-flex align-items-center bg-white">
+@* Hakkımızda *@
+<section id="hakkimizda" class="vh-100 d-flex align-items-center mt-4 bg-white">
   <div class="container">
     <div class="row gy-4">
       <div class="col-md-6 d-flex flex-column justify-content-center">
-        <h2>Daha fazla öğrenmek ister misiniz?</h2>
-        <p>Hemen butona tıklayın ve bizi keşfetmeye başlayın!</p>
-        <a href="@Url.Action("About","Home")" class="btn btn-primary">Bizi Keşfet</a>
+        <h2>
+          @sec.GetValueOrDefault("HakkimizdaCTA_Title", "CTA başlığı bulunamadı")
+        </h2>
+        <p>
+          @Html.Raw(sec.GetValueOrDefault("HakkimizdaCTA_Text", "<em>CTA metni yok</em>"))
+        </p>
+        <a href="@Url.Action("About","Home")" class="btn btn-primary">
+          @sec.GetValueOrDefault("HakkimizdaCTA_Button", "Buton Metni")
+        </a>
       </div>
       <div class="col-md-6 d-flex flex-column justify-content-center">
-        <h2>Hakkımızda</h2>
+        <h2>
+          @sec.GetValueOrDefault("HakkimizdaAbout_Title", "Hakkımızda başlığı bulunamadı")
+        </h2>
         <p>
-          CarService ailesi olarak yılların verdiği tecrübe ve
-          uzman kadromuzla araç bakım ve onarımında en güvenilir
-          adres olmayı hedefliyoruz. Teknolojik ekipmanlarımız ve
-          müşteri odaklı yaklaşımımız sayesinde, aracınızı ilk gün
-          ki performansıyla yola devam ettiriyoruz.
+          @Html.Raw(sec.GetValueOrDefault("HakkimizdaAbout_Text", "<em>Hakkımızda metni yok</em>"))
         </p>
       </div>
     </div>
   </div>
 </section>
 
+@* İletişim CTA *@
 <section id="iletisim-cta" class="bg-secondary text-white py-3">
   <div class="container d-flex justify-content-between align-items-center">
-    <h5 class="mb-0">Bizimle iletişime geçmek ister misiniz?</h5>
+    <h5 class="mb-0">
+      @sec.GetValueOrDefault("IletisimCTA_Text", "İletişim CTA metni bulunamadı")
+    </h5>
     <a asp-controller="Home" asp-action="Contact" class="btn btn-light">
-      İletişim Sayfası
+      @sec.GetValueOrDefault("IletisimCTA_Button", "Buton Metni")
     </a>
   </div>
 </section>
 
+
 @section Scripts {
   <partial name="_ValidationScriptsPartial" />
   <script>
+    document.querySelectorAll('.card').forEach(c => {
+      c.addEventListener('mouseenter', () => {
+        c.style.boxShadow = '0 0 25px rgba(13, 110, 253, 0.4)';
+      });
+      c.addEventListener('mouseleave', () => {
+        c.style.boxShadow = '';
+      });
+    });
     const inner = document.getElementById('heroInner');
 
     // Buton tıklamaları

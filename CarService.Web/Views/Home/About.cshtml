@@ -1,10 +1,57 @@
+@using CarService.Web.Services
+@using System.Collections.Generic
+@model Dictionary<string,string>
 @{
     Layout = "_Layout";
-    ViewData["Title"] = "Hakkımızda";
+    ViewData["Title"] = "Hakkımızda";   
+    var data = Model;
+    string Get(string key, string def="") 
+        => data.TryGetValue(key, out var v) ? v : def;
 }
 
 @section Styles {
   <style>
+    body {
+      background-color: #121212;
+      color: #e0e0e0;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    h1, h4 {
+      color: #ffffff;
+    }
+
+    .bg-light {
+      background-color: #1e1e1e !important;
+    }
+
+    .bg-white {
+      background-color: #1a1a1a !important;
+    }
+
+    .container {
+      max-width: 960px;
+    }
+
+
+    .card, .logo-marquee img {
+      background-color: transparent;
+    }
+
+    .logo-marquee {
+      border-top: 1px solid #333;
+      border-bottom: 1px solid #333;
+      padding: 1rem 0;
+    }
+
+    .logo-marquee img {
+      filter: grayscale(1) brightness(0.8);
+      transition: filter 0.3s ease;
+    }
+    .logo-marquee img:hover {
+      filter: brightness(1.1);
+    }
+
     .logo-marquee {
       position: relative;
       overflow: hidden;
@@ -33,41 +80,41 @@
       0%   { transform: translateX(0); }
       100% { transform: translateX(-50%); }
     }
+
+    @@media (min-width: 768px) {
+      .row.gy-4 > div {
+        padding: 0 1rem;
+      }
+    }
   </style>
 }
 
 <section class="py-5 bg-light">
   <div class="container">
-    <h1 class="mb-5 text-center">CarService</h1>
+    <h1>@Model.GetValueOrDefault("AboutHeading","Ana Başlık")</h1>
     <div class="row gy-4">
       <!-- 1. Bölüm: Metin 1 -->
-      <div class="col-md-3">
-        <h4>Bölüm 1</h4>
-        <p>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus aliquet augue in sapien vestibulum, nec bibendum mi interdum.
-        </p>
+      <div class="col-md-6">
+        <h4>@Model.GetValueOrDefault("AboutSection1_Title","Başlık 1")</h4>
+        <p>@Model.GetValueOrDefault("AboutSection1_Text","Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi pretium tellus duis convallis. Tempus leo eu aenean sed diam urna tempor. Pulvinar vivamus fringilla lacus nec metus bibendum egestas. Iaculis massa nisl malesuada lacinia integer nunc posuere. Ut hendrerit semper vel class aptent taciti sociosqu. Ad litora torquent per conubia nostra inceptos himenaeos.")</p>
       </div>
 
       <!-- 2. Bölüm: Metin 2 -->
-      <div class="col-md-3">
-        <h4>Bölüm 2</h4>
-        <p>
-          Fusce sed ex vitae lectus facilisis ullamcorper. Integer sit amet convallis magna. Aliquam erat volutpat. Vivamus efficitur convallis aliquet.
-        </p>
+      <div class="col-md-6">
+        <h4>@Model.GetValueOrDefault("AboutSection2_Title","Başlık 2")</h4>
+        <p>@Model.GetValueOrDefault("AboutSection2_Text","Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi pretium tellus duis convallis. Tempus leo eu aenean sed diam urna tempor. Pulvinar vivamus fringilla lacus nec metus bibendum egestas. Iaculis massa nisl malesuada lacinia integer nunc posuere. Ut hendrerit semper vel class aptent taciti sociosqu. Ad litora torquent per conubia nostra inceptos himenaeos.")</p>
       </div>
 
       <!-- 3. Bölüm: Metin 3 -->
-      <div class="col-md-3">
-        <h4>Bölüm 3</h4>
-        <p>
-          Sed sit amet scelerisque libero. Duis vitae sagittis ante. Cras nec sagittis nunc. Pellentesque a purus sit amet magna vehicula pretium.
-        </p>
+      <div class="col-md-6">
+        <h4>@Model.GetValueOrDefault("AboutSection3_Title","Başlık 3")</h4>
+        <p>@Model.GetValueOrDefault("AboutSection3_Text","Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi pretium tellus duis convallis. Tempus leo eu aenean sed diam urna tempor. Pulvinar vivamus fringilla lacus nec metus bibendum egestas. Iaculis massa nisl malesuada lacinia integer nunc posuere. Ut hendrerit semper vel class aptent taciti sociosqu. Ad litora torquent per conubia nostra inceptos himenaeos.")</p>
       </div>
 
-      <!-- 4. Bölüm: Logo -->
-      <div class="col-md-3 text-center">
-        <img src="~/images/logo-placeholder.png" alt="CarService Logo" class="img-fluid mb-3" />
-        <p class="fw-bold">CarService Logo</p>
+      <!-- 4. Bölüm: Metin 4 -->
+      <div class="col-md-6">
+        <h4>@Model.GetValueOrDefault("AboutSection4_Title","Başlık 4")</h4>
+        <p>@Model.GetValueOrDefault("AboutSection4_Text","Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi pretium tellus duis convallis. Tempus leo eu aenean sed diam urna tempor. Pulvinar vivamus fringilla lacus nec metus bibendum egestas. Iaculis massa nisl malesuada lacinia integer nunc posuere. Ut hendrerit semper vel class aptent taciti sociosqu. Ad litora torquent per conubia nostra inceptos himenaeos.")</p>
       </div>
     </div>
   </div>

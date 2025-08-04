@@ -1,0 +1,29 @@
+@model Dictionary<string,string>
+@{
+    Layout = "_AdminLayout";
+    var m = Model ?? new Dictionary<string,string>();
+    string G(string key, string def="") 
+        => m.TryGetValue(key, out var v) ? v : def;
+}
+
+<h2>Footer İletişim Bilgileri Düzenleme</h2>
+<form asp-area="Admin" asp-controller="ContactContent" asp-action="Edit" method="post">
+  @Html.AntiForgeryToken()
+
+  <div class="mb-3">
+    <label for="FooterEmail">Email</label>
+    <input id="FooterEmail" name="FooterEmail" class="form-control" value="@G("FooterEmail")" />
+  </div>
+
+  <div class="mb-3">
+    <label for="FooterPhone">Telefon</label>
+    <input id="FooterPhone" name="FooterPhone" class="form-control" value="@G("FooterPhone")" />
+  </div>
+
+  <div class="mb-3">
+    <label for="FooterAddress">Adres</label>
+    <input id="FooterAddress" name="FooterAddress" class="form-control" value="@G("FooterAddress")" />
+  </div>
+
+  <button type="submit" class="btn btn-primary">Kaydet</button>
+</form>

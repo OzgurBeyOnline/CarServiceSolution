@@ -32,7 +32,7 @@ namespace CarService.Web.Areas.Admin.Controllers
                 Name = vm.Name,
                 Description = vm.Description ?? string.Empty
             });
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(Create));
         }
 
         public async Task<IActionResult> Edit(int id)
@@ -55,7 +55,7 @@ namespace CarService.Web.Areas.Admin.Controllers
             st.Name = vm.Name;
             st.Description = vm.Description ?? string.Empty;
             await _svc.UpdateAsync(st);
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(Create));
         }
 
         public async Task<IActionResult> Delete(int id)
@@ -69,7 +69,7 @@ namespace CarService.Web.Areas.Admin.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             await _svc.DeleteAsync(id);
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(Create));
         }
     }
 }

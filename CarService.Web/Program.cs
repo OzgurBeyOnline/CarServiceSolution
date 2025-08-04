@@ -47,8 +47,7 @@ builder.Services.AddScoped<IPricingService, PricingService>();
 builder.Services.AddScoped<IAppointmentService, AppointmentService>();
 builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<IEmailService, SmtpEmailService>();
-builder.Services.AddScoped<IContentService, ContentService>();
-builder.Services.AddScoped<IPageContentService, PageContentService>();
+builder.Services.AddSingleton<IJsonContentService, JsonContentService>();
 
 builder.Services.AddSingleton<IPasswordHashingService, PasswordHashingService>();
 builder.Services.AddScoped<IPasswordHasher<Customer>, PasswordHasher<Customer>>();
@@ -88,7 +87,7 @@ app.MapControllerRoute(
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}")
-  .WithStaticAssets();
+.WithStaticAssets();
 app.MapRazorPages();
 
 // 6) Roller ve kullanıcı seeding (DB’den dinamik okuma)

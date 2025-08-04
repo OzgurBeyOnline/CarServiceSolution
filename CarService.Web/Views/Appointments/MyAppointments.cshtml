@@ -5,9 +5,30 @@
 @{
     ViewData["Title"] = "Randevularım";
 }
+
+@section Styles{
+  <style>
+      @@keyframes fadeSlideIn {
+        from {
+          opacity: 0;
+          transform: translateY(30px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .animate-table {
+        animation: fadeSlideIn 0.8s ease-out forwards;
+      }
+
+  </style>
+}
+
 <h2>@ViewData["Title"]</h2>
 
-<table class="table">
+<table class="table animate-table">
   <thead>
     <tr>
       <th>Tarih</th><th>Servis</th><th>Çalışan</th><th>Durum</th><th>Not</th>

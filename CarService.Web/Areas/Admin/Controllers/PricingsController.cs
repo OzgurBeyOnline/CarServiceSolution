@@ -35,6 +35,8 @@ namespace CarService.Web.Areas.Admin.Controllers
                 ServiceTypes = (await _svcType.GetAllAsync())
                   .Select(st => new SelectListItem(st.Name, st.Id.ToString()))
             };
+            var allPricings = await _pricing.GetAllAsync();
+            ViewBag.AllPricings = allPricings;
             return View(vm);
         }
 
@@ -51,14 +53,16 @@ namespace CarService.Web.Areas.Admin.Controllers
                 ServiceTypeId = vm.ServiceTypeId,
                 Price         = vm.Price
             });
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(Create));
         }
 
         public async Task<IActionResult> Edit(int id)
         {
+            
             var p = await _pricing.GetByIdAsync(id);
             if (p == null) return NotFound();
             var vm = new PricingCreateViewModel {
+                Id            = p.Id,
                 ServiceTypeId = p.ServiceTypeId,
                 Price         = p.Price,
                 ServiceTypes  = (await _svcType.GetAllAsync())
@@ -68,7 +72,7 @@ namespace CarService.Web.Areas.Admin.Controllers
         }
 
         [HttpPost, ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, PricingCreateViewModel vm)
+        public async Task<IActionResult> Edit(PricingCreateViewModel vm)
         {
             if (!ModelState.IsValid)
             {
@@ -76,19 +80,19 @@ namespace CarService.Web.Areas.Admin.Controllers
                   .Select(st => new SelectListItem(st.Name, st.Id.ToString()));
                 return View(vm);
             }
-            var p = await _pricing.GetByIdAsync(id);
+            var p = await _pricing.GetByIdAsync(vm.Id);
             if (p == null) return NotFound();
             p.ServiceTypeId = vm.ServiceTypeId;
             p.Price         = vm.Price;
             await _pricing.UpdateAsync(p);
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(Create));
         }
 
         [HttpPost, ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(int id)
         {
             await _pricing.DeleteAsync(id);
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(Create));
         }
     }
 }

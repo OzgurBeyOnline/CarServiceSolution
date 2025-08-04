@@ -8,10 +8,32 @@
   <style>
     .form-section { max-width:600px; margin:auto; }
     .form-buttons { display:flex; justify-content:space-between; margin-top:1rem; }
+    .form-container {
+      opacity: 0;
+      transform: translateY(30px);
+      animation: slideFadeIn 0.5s ease-out forwards;
+    }
+
+    @@keyframes slideFadeIn {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .form-check {
+      margin-bottom: 8px;
+    }
+
+    select.form-select,
+    input.form-control,
+    textarea.form-control {
+      background-color: #f8f9fa;
+    }
   </style>
 }
 
-<div class="container py-5">
+<div class="container py-5 form-container">
   <h2 class="mb-4 text-center">Randevu Oluştur</h2>
   <div class="form-section">
     <form asp-action="CreateCustomer" method="post">

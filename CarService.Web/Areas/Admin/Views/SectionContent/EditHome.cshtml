@@ -1,0 +1,84 @@
+@model Dictionary<string,string>
+@{
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+    ViewData["Title"] = "Anasayfa Bölüm İçerikleri";
+}
+
+<h2>Anasayfa Bölüm İçerikleri</h2>
+@if(TempData["Success"]!=null){
+  <div class="alert alert-success">@TempData["Success"]</div>
+}
+
+<form asp-area="Admin" asp-controller="SectionContent" asp-action="EditHome" method="post">
+  @Html.AntiForgeryToken()
+
+  @* Misyon/Vizyon *@
+  <h4>Misyon/Vizyon</h4>
+  <div class="mb-3">
+    <label>Misyon Başlık</label>
+    <input name="MisyonTitle" class="form-control" 
+           value="@(Model.GetValueOrDefault("MisyonTitle",""))" />
+  </div>
+  <div class="mb-3">
+    <label>Misyon Metin</label>
+    <textarea name="MisyonText" class="form-control" rows="3">
+      @(Model.GetValueOrDefault("MisyonText",""))
+    </textarea>
+  </div>
+  <div class="mb-3">
+    <label>Vizyon Başlık</label>
+    <input name="VizyonTitle" class="form-control" 
+           value="@(Model.GetValueOrDefault("VizyonTitle",""))" />
+  </div>
+  <div class="mb-3">
+    <label>Vizyon Metin</label>
+    <textarea name="VizyonText" class="form-control" rows="3">
+      @(Model.GetValueOrDefault("VizyonText",""))
+    </textarea>
+  </div>
+
+  @* Hakkımızda *@
+  <h4>Hakkımızda</h4>
+  <div class="mb-3">
+    <label>CTA Başlık</label>
+    <input name="HakkimizdaCTA_Title" class="form-control" 
+           value="@(Model.GetValueOrDefault("HakkimizdaCTA_Title",""))" />
+  </div>
+  <div class="mb-3">
+    <label>CTA Metin</label>
+    <textarea name="HakkimizdaCTA_Text" class="form-control" rows="2">
+      @(Model.GetValueOrDefault("HakkimizdaCTA_Text",""))
+    </textarea>
+  </div>
+  <div class="mb-3">
+    <label>CTA Buton Metni</label>
+    <input name="HakkimizdaCTA_Button" class="form-control" 
+           value="@(Model.GetValueOrDefault("HakkimizdaCTA_Button",""))" />
+  </div>
+  <div class="mb-3">
+    <label>Hakkımızda Başlık</label>
+    <input name="HakkimizdaAbout_Title" class="form-control" 
+           value="@(Model.GetValueOrDefault("HakkimizdaAbout_Title",""))" />
+  </div>
+  <div class="mb-3">
+    <label>Hakkımızda Metin</label>
+    <textarea name="HakkimizdaAbout_Text" class="form-control" rows="3">
+      @(Model.GetValueOrDefault("HakkimizdaAbout_Text",""))
+    </textarea>
+  </div>
+
+  @* İletişim CTA *@
+  <h4>İletişim CTA</h4>
+  <div class="mb-3">
+    <label>Metin</label>
+    <input name="IletisimCTA_Text" class="form-control" 
+           value="@(Model.GetValueOrDefault("IletisimCTA_Text",""))" />
+  </div>
+  <div class="mb-3">
+    <label>Buton Metni</label>
+    <input name="IletisimCTA_Button" class="form-control" 
+           value="@(Model.GetValueOrDefault("IletisimCTA_Button",""))" />
+  </div>
+
+  <button type="submit" class="btn btn-primary">Kaydet</button>
+</form>
